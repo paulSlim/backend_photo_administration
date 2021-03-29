@@ -54,8 +54,8 @@ exports.getPhoto = (request, response, next) => {
 
 exports.postPhoto = (request, response, next) => {
   try {
-    const { authors, img, title } = request.body;
-    if (!authors || !title) {
+    const { fileName, title, description, keywords, theme } = request.body;
+    if (!fileName || !title || !description || !keywords || !theme) {
       response.status(400).json({
         message: 'Nie podano wszystkich wymaganych informacji',
       });
@@ -66,17 +66,19 @@ exports.postPhoto = (request, response, next) => {
     const isPhotoExist = photosData.some(({ title: currentTitle }) => currentTitle === title);
     if (isPhotoExist) {
       response.status(409).json({
-        message: `Istnieje już w bazie zdjęcie ${title}`,
+        message: `Istnieje już w bazie zdjęcie o podantm tytule ${title}`,
       });
 
       return;
     }
 
     const newPhoto = {
-      authors: authors,
+      fileName,
       id: uuid(),
-      img,
       title,
+      description,
+      keywords,
+      theme
     };
 
     photosData.push(newPhoto);
