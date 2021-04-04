@@ -3,18 +3,11 @@ const { photosData } = require('./photos');
 const usersData = [
   {
     accessLevel: 0,
-    photos: [
-      photosData[0].id,
-      photosData[1].id,
-    ],
     login: 'User',
     password: '12345',
   },
   {
     accessLevel: 1,
-    photos: [
-      photosData.map(photo => photo.id)
-    ],
     login: 'Admin',
     password: '******',
   }

@@ -1,19 +1,6 @@
 const { v4: uuid } = require('uuid');
 
-const photosData = [
-  {
-    authors: ['Adam'],
-    id: uuid(),
-    img: 'http://localhost:8000/_TW00073_Nik_DxO.jpg',
-    title: 'Jeleń na rykowisku',
-  },
-  {
-    authors: ['Grzegorz'],
-    id: uuid(),
-    img: 'http://localhost:8000/image.jpg',
-    title: 'Tralala',
-  },
-];
+const photosData = [];
 
 exports.getPhotos = (request, response, next) => {
   try {
@@ -52,10 +39,12 @@ exports.getPhoto = (request, response, next) => {
   }
 };
 
+
+
 exports.postPhoto = (request, response, next) => {
   try {
-    const { fileName, title, description, keywords, theme } = request.body;
-    if (!fileName || !title || !description || !keywords || !theme) {
+    const { fileAddress, title, description, keywords, theme } = request.body;
+    if (!fileAddress || !title || !description || !keywords || !theme) {
       response.status(400).json({
         message: 'Nie podano wszystkich wymaganych informacji',
       });
@@ -66,14 +55,14 @@ exports.postPhoto = (request, response, next) => {
     const isPhotoExist = photosData.some(({ title: currentTitle }) => currentTitle === title);
     if (isPhotoExist) {
       response.status(409).json({
-        message: `Istnieje już w bazie zdjęcie o podantm tytule ${title}`,
+        message: `Istnieje już w bazie zdjęcie o podanym tytule ${title}`,
       });
 
       return;
     }
 
     const newPhoto = {
-      fileName,
+      fileAddress,
       id: uuid(),
       title,
       description,
