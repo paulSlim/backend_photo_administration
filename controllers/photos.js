@@ -1,4 +1,5 @@
 const { v4: uuid } = require('uuid');
+const fs = require('fs');
 
 const photosData = [];
 
@@ -132,7 +133,16 @@ exports.deletePhoto = (request, response, next) => {
       return;
     }
 
+    const path = `./uploaded/${photosData[indexPhotoToDelete].fileAddress}`;
+
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+    })
     photosData.splice(indexPhotoToDelete, 1);
+
     response.status(200).end();
   } catch (error) {
     response.status(500).json({
