@@ -86,8 +86,8 @@ exports.postPhoto = (request, response, next) => {
 
 exports.putPhoto = (request, response, next) => {
   try {
-    const { authors, id, title } = request.body;
-    if (!authors || !id || !title) {
+    const { id, fileAddress, title, description, keywords, theme } = request.body;
+    if (!id || !fileAddress || !title || !description || !keywords || !theme) {
       response.status(400).json({
         message: 'Nie podano wszystkich wymaganych informacji',
       });
@@ -95,7 +95,7 @@ exports.putPhoto = (request, response, next) => {
       return;
     }
 
-    const indexPhotoToUpdate = photosData.findIndex(course => course.id === id);
+    const indexPhotoToUpdate = photosData.findIndex(photo => photo.id === id);
     if (indexPhotoToUpdate === -1) {
       response.status(404).json({
         message: 'Nie znaleziono zdjęcia o podanym id',
