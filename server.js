@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const photosRoutes = require('./routes/photos');
 const usersRoutes = require('./routes/users');
+const themesRoutes = require('./routes/themes');
 
 const server = express();
 
@@ -13,6 +14,8 @@ server.use(cors());
 
 server.use('/photos', photosRoutes);
 server.use('/users', usersRoutes);
+server.use('/themes', themesRoutes);
+
 server.use(express.static('uploaded')); // serve files
 
 const storage = multer.diskStorage({
