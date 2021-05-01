@@ -57,3 +57,37 @@ exports.postTheme = (request, response, next) => {
     });
   }
 };
+
+exports.putTheme = (request, response, next) => {
+  try {
+    const { id, themeName } = request.body;
+    if (!id || !themeName) {
+      response.status(400).json({
+        message: "Nie podano wszystkich wymaganych informacji",
+      });
+
+      return;
+    }
+
+    const indexThemeToUpdate = themesData.findIndex((theme) => theme.id === id);
+    if (indexThemeToUpdate === -1) {
+      response.status(404).json({
+        message: "Nie znaleziono tematu o podanym id",
+      });
+
+      return;
+    }
+
+    themesData.splice(indexThemeToUpdate, 1, request.body);
+
+    response.status(202).json({
+      themes: themesData,
+    });
+  } catch (error) {
+    response.status(500).json({
+      error,
+      message:
+        "Oops! Coś poszło nie tak, przy metodzie PUT w endpointcie /themes",
+    });
+  }
+};
