@@ -1,6 +1,8 @@
 const { v4: uuid } = require("uuid");
 const fs = require("fs");
 
+const { photosData } = require("./photos");
+
 const themesData = [];
 
 exports.getThemes = (request, response, next) => {
@@ -60,8 +62,8 @@ exports.postTheme = (request, response, next) => {
 
 exports.putTheme = (request, response, next) => {
   try {
-    const { id, themeName } = request.body;
-    if (!id || !themeName) {
+    const { id, oldThemeName, themeName } = request.body;
+    if (!id || !oldThemeName || !themeName) {
       response.status(400).json({
         message: "Nie podano wszystkich wymaganych informacji",
       });
@@ -77,6 +79,12 @@ exports.putTheme = (request, response, next) => {
 
       return;
     }
+
+    photosData.forEach((photo) => {
+      if (photo.theme === oldThemeName) {
+        photo.theme = themeName;
+      }
+    });
 
     themesData.splice(indexThemeToUpdate, 1, request.body);
 
