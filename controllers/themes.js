@@ -63,6 +63,8 @@ exports.postTheme = (request, response, next) => {
 exports.putTheme = (request, response, next) => {
   try {
     const { id, oldThemeName, themeName } = request.body;
+    console.log(id);
+    console.log(themeName);
     if (!id || !oldThemeName || !themeName) {
       response.status(400).json({
         message: "Nie podano wszystkich wymaganych informacji",
@@ -96,6 +98,41 @@ exports.putTheme = (request, response, next) => {
       error,
       message:
         "Oops! Coś poszło nie tak, przy metodzie PUT w endpointcie /themes",
+    });
+  }
+};
+
+exports.deleteTheme = (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    console.log(id);
+    const indexThemeToDelete = themesData.findIndex((theme) => theme.id === id);
+
+    if (indexThemeToDelete === -1) {
+      response.status(404).json({
+        message: "Nie znaleziono tematu o podanym id",
+      });
+
+      return;
+    }
+
+    const themeName = themesData[indexThemeToDelete].themeName;
+
+    photosData.forEach((photo) => {
+      if (photo.theme === themeName) {
+        photo.theme = "";
+      }
+    });
+
+    themesData.splice(indexThemeToDelete, 1);
+
+    response.status(200).end();
+  } catch (error) {
+    response.status(500).json({
+      error,
+      message:
+        "Oops! Coś poszło nie tak, przy metodzie DELETE w endpointcie /themes/:id",
     });
   }
 };
