@@ -3,7 +3,11 @@ const fs = require("fs");
 
 const { photosData } = require("./photos");
 
-const themesData = [];
+const themesData = [
+  { themeName: "test1", id: "2d821860-d86d-4ccc-a522-fc82647e1fc7" },
+  { themeName: "test2", id: "348bdfde-1f27-4fbd-9fa0-40ff48570426" },
+  { themeName: "test3", id: "65b2f394-6731-4e8d-87f5-c4c116292b12" },
+];
 
 exports.getThemes = (request, response, next) => {
   try {

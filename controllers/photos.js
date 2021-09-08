@@ -1,7 +1,57 @@
 const { v4: uuid } = require("uuid");
 const fs = require("fs");
+const { request } = require("http");
 
-const photosData = [];
+const photosData = [
+  {
+    fileAddress: "brama.jpg",
+    id: "af8188e0-a709-4fff-94d3-128113bdf6b2",
+    title: "Brama",
+    description: "1",
+    keywords: ["Brama"],
+    theme: "test1",
+  },
+  {
+    fileAddress: "Cieplice.jpg",
+    id: "aa0b80b2-9d15-4298-bac3-9ba108ddc327",
+    title: "Cieplice",
+    description: "2",
+    keywords: ["Ceplice"],
+    theme: "test2",
+  },
+  {
+    fileAddress: "Gaja 50x70.jpg",
+    id: "02b52ed6-7caf-407a-a774-1e4420510665",
+    title: "Gaja",
+    description: "3",
+    keywords: ["Gaja"],
+    theme: "test3",
+  },
+  {
+    fileAddress: "nuthatch.jpg",
+    id: "b18936a7-5e71-48f7-a8eb-9eae71a5e572",
+    title: "Ptak",
+    description: "4",
+    keywords: ["Ptak"],
+    theme: "test1",
+  },
+  {
+    fileAddress: "Poczta.jpg",
+    id: "a553bcc0-cc78-4e54-876a-227323152797",
+    title: "Poczta",
+    description: "5",
+    keywords: ["Poczta"],
+    theme: "test2",
+  },
+  {
+    fileAddress: "Walkiria.jpg",
+    id: "64bcc249-cd80-4567-bf48-6963bf55c052",
+    title: "Walkiria",
+    description: "6",
+    keywords: ["Walkiria"],
+    theme: "test3",
+  },
+];
 
 exports.getPhotos = (request, response, next) => {
   try {

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
 
+const orderRoutes = require("./routes/order");
 const photosRoutes = require("./routes/photos");
 const usersRoutes = require("./routes/users");
 const themesRoutes = require("./routes/themes");
@@ -12,6 +13,7 @@ const server = express();
 server.use(bodyParser.json());
 server.use(cors());
 
+server.use("/order", orderRoutes);
 server.use("/photos", photosRoutes);
 server.use("/users", usersRoutes);
 server.use("/themes", themesRoutes);
