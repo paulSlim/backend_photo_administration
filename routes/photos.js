@@ -7,7 +7,8 @@ const router = express.Router();
 router.get("/", photosController.getPhotos);
 router.post("/", photosController.postPhoto);
 router.put("/", photosController.putPhoto);
-router.delete("/:id", photosController.deletePhoto);
+router.patch("/", photosController.patchPhoto);
+router.delete("/", photosController.deletePhoto);
 router.use((request, response) => response.status(404).end());
 
 module.exports = router;

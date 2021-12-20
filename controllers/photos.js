@@ -20,30 +20,6 @@ const photosData = [
     theme: "test2",
   },
   {
-    fileAddress: "Gaja 50x70.jpg",
-    id: "02b52ed6-7caf-407a-a774-1e4420510665",
-    title: "Gaja",
-    description: "3",
-    keywords: ["Gaja"],
-    theme: "test3",
-  },
-  {
-    fileAddress: "nuthatch.jpg",
-    id: "b18936a7-5e71-48f7-a8eb-9eae71a5e572",
-    title: "Ptak",
-    description: "4",
-    keywords: ["Ptak"],
-    theme: "test1",
-  },
-  {
-    fileAddress: "Poczta.jpg",
-    id: "a553bcc0-cc78-4e54-876a-227323152797",
-    title: "Poczta",
-    description: "5",
-    keywords: ["Poczta"],
-    theme: "test2",
-  },
-  {
     fileAddress: "Walkiria.jpg",
     id: "64bcc249-cd80-4567-bf48-6963bf55c052",
     title: "Walkiria",
@@ -147,37 +123,87 @@ exports.putPhoto = (request, response, next) => {
   }
 };
 
-exports.deletePhoto = (request, response, next) => {
+exports.patchPhoto = (request, response, next) => {
   try {
-    const { id } = request.params;
-
-    console.log(id);
-    const indexPhotoToDelete = photosData.findIndex((photo) => photo.id === id);
-
-    if (indexPhotoToDelete === -1) {
-      response.status(404).json({
-        message: "Nie znaleziono zdjęcia o podanym id",
+    const { selectedPhotoIds, keywords, theme } = request.body;
+    if (!selectedPhotoIds) {
+      response.status(400).json({
+        message: "Lista przesłanych zdjęć do edycji jest pusta",
       });
 
       return;
     }
 
-    const path = `./uploaded/${photosData[indexPhotoToDelete].fileAddress}`;
+    selectedPhotoIds.forEach((id) => {
+      const indexPhotoToUpdate = photosData.findIndex(
+        (photo) => photo.id === id.id
+      );
+      const currentPhoto = photosData[indexPhotoToUpdate];
 
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(err);
-        return;
+      const photoKeywords = currentPhoto.keywords;
+
+      if (keywords.length > 0) {
+        const keywordsToAdd = keywords.filter(
+          (keyword) => keyword !== photoKeywords
+        );
+
+        const testKeywords = [...photoKeywords, ...keywordsToAdd];
+        currentPhoto.keywords = testKeywords;
+        console.log(currentPhoto.keywords);
+      }
+
+      if (theme) {
+        currentPhoto.theme = theme;
       }
     });
-    photosData.splice(indexPhotoToDelete, 1);
+
+    response.status(202).json({
+      photos: photosData,
+    });
+  } catch (error) {
+    response.status(500).json({
+      error,
+      message:
+        "Oops! Coś poszło nie tak, przy metodzie PATCH w endpointcie /photos",
+    });
+  }
+};
+
+exports.deletePhoto = (request, response, next) => {
+  try {
+    const { ...photosIds } = request.body;
+
+    Object.values(photosIds).forEach((photoId) => {
+      console.log(photoId);
+      const indexPhotoToDelete = photosData.findIndex(
+        (photo) => photo.id === photoId.id
+      );
+
+      if (indexPhotoToDelete === -1) {
+        response.status(404).json({
+          message: "Nie znaleziono zdjęcia o podanym id",
+        });
+
+        return;
+      }
+
+      const path = `./uploaded/${photosData[indexPhotoToDelete].fileAddress}`;
+
+      fs.unlink(path, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+      photosData.splice(indexPhotoToDelete, 1);
+    });
 
     response.status(200).end();
   } catch (error) {
     response.status(500).json({
       error,
       message:
-        "Oops! Coś poszło nie tak, przy metodzie DELETE w endpointcie /photos/:id",
+        "Oops! Coś poszło nie tak, przy metodzie DELETE w endpointcie /photos",
     });
   }
 };
