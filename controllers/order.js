@@ -1,4 +1,6 @@
 const { photosData } = require("./photos");
+const { writePhotoDataToJsonFile } = require("../photoReadWriteDataController");
+const controllerName = "photosController";
 
 exports.movePhoto = (request, response, next) => {
   try {
@@ -66,6 +68,7 @@ exports.movePhoto = (request, response, next) => {
     }
 
     response.status(200).end();
+    writePhotoDataToJsonFile(controllerName);
   } catch (error) {
     response.status(500).json({
       error,

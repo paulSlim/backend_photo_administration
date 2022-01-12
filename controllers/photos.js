@@ -1,33 +1,37 @@
 const { v4: uuid } = require("uuid");
 const fs = require("fs");
 const { request } = require("http");
+const { getDataFromJson } = require("../photoReadWriteDataController");
+const { writeDataToJson } = require("../photoReadWriteDataController");
 
-const photosData = [
-  {
-    fileAddress: "brama.jpg",
-    id: "af8188e0-a709-4fff-94d3-128113bdf6b2",
-    title: "Brama",
-    description: "1",
-    keywords: ["Brama"],
-    theme: "test1",
-  },
-  {
-    fileAddress: "Cieplice.jpg",
-    id: "aa0b80b2-9d15-4298-bac3-9ba108ddc327",
-    title: "Cieplice",
-    description: "2",
-    keywords: ["Ceplice"],
-    theme: "test2",
-  },
-  {
-    fileAddress: "Walkiria.jpg",
-    id: "64bcc249-cd80-4567-bf48-6963bf55c052",
-    title: "Walkiria",
-    description: "6",
-    keywords: ["Walkiria"],
-    theme: "test3",
-  },
-];
+const jsonPath = "./photo-data.json";
+
+const photosData = getDataFromJson(jsonPath);
+//   {
+//     fileAddress: "brama.jpg",
+//     id: "af8188e0-a709-4fff-94d3-128113bdf6b2",
+//     title: "Brama",
+//     description: "1",
+//     keywords: ["Brama"],
+//     theme: "test1",
+//   },
+//   {
+//     fileAddress: "Cieplice.jpg",
+//     id: "aa0b80b2-9d15-4298-bac3-9ba108ddc327",
+//     title: "Cieplice",
+//     description: "2",
+//     keywords: ["Ceplice"],
+//     theme: "test2",
+//   },
+//   {
+//     fileAddress: "Walkiria.jpg",
+//     id: "64bcc249-cd80-4567-bf48-6963bf55c052",
+//     title: "Walkiria",
+//     description: "6",
+//     keywords: ["Walkiria"],
+//     theme: "test3",
+//   },
+// ];
 
 exports.getPhotos = (request, response, next) => {
   try {
@@ -79,6 +83,7 @@ exports.postPhoto = (request, response, next) => {
     response.status(201).json({
       photos: photosData,
     });
+    writeDataToJson(jsonPath, photosData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -114,6 +119,7 @@ exports.putPhoto = (request, response, next) => {
     response.status(202).json({
       photos: photosData,
     });
+    writeDataToJson(jsonPath, photosData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -160,6 +166,7 @@ exports.patchPhoto = (request, response, next) => {
     response.status(202).json({
       photos: photosData,
     });
+    writeDataToJson(jsonPath, photosData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -197,8 +204,8 @@ exports.deletePhoto = (request, response, next) => {
       });
       photosData.splice(indexPhotoToDelete, 1);
     });
-
     response.status(200).end();
+    writeDataToJson(jsonPath, photosData);
   } catch (error) {
     response.status(500).json({
       error,

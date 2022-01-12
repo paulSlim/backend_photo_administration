@@ -1,13 +1,13 @@
 const { v4: uuid } = require("uuid");
 const fs = require("fs");
+const { getDataFromJson } = require("../photoReadWriteDataController");
+const { writeDataToJson } = require("../photoReadWriteDataController");
+
+const jsonPath = "./theme-data.json";
 
 const { photosData } = require("./photos");
 
-const themesData = [
-  { themeName: "test1", id: "2d821860-d86d-4ccc-a522-fc82647e1fc7" },
-  { themeName: "test2", id: "348bdfde-1f27-4fbd-9fa0-40ff48570426" },
-  { themeName: "test3", id: "65b2f394-6731-4e8d-87f5-c4c116292b12" },
-];
+const themesData = getDataFromJson(jsonPath);
 
 exports.getThemes = (request, response, next) => {
   try {
@@ -55,6 +55,7 @@ exports.postTheme = (request, response, next) => {
     response.status(201).json({
       themes: themesData,
     });
+    writeDataToJson(jsonPath, themesData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -97,6 +98,7 @@ exports.putTheme = (request, response, next) => {
     response.status(202).json({
       themes: themesData,
     });
+    writeDataToJson(jsonPath, themesData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -132,6 +134,7 @@ exports.deleteTheme = (request, response, next) => {
     themesData.splice(indexThemeToDelete, 1);
 
     response.status(200).end();
+    writeDataToJson(jsonPath, themesData);
   } catch (error) {
     response.status(500).json({
       error,
@@ -140,3 +143,5 @@ exports.deleteTheme = (request, response, next) => {
     });
   }
 };
+
+exports.themesData = themesData;
